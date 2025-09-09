@@ -1,0 +1,31 @@
+#box {
+  margin: 200px auto; 
+  background-color: lightblue; 
+  color: black;
+  min-height: 600px;
+  width: 500px;
+  padding: 15px;
+  max-width: 90%; 
+  border-radius: 20px;
+}
+
+#aiFeedback{
+  min-height: 10px;
+
+}
+
+#aiGeneratedQuestions{
+  min-height: 30px;
+}
+
+
+#cont{
+   display: grid;
+
+}
+
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
