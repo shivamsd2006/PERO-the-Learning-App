@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function CallAi(prompt) {
         try {
-            const response = await fetch('http://localhost:3000/api/generate', {
+            const response = await fetch('/api/generate', {
                 method: 'POST',
                 headers: {
                     'content-Type': 'application/json',
