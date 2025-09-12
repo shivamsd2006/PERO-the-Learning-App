@@ -1,12 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
+const path = require('path');
+
 
 const app = express();
 const port = 3000;
-const apiKey = process.env.geminiApiKey;
+const apiKey = process.env.GEMINI_API_KEY;
 
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
 
 app.post('/api/generate', async (req, res) => {
     try {
@@ -20,7 +28,7 @@ app.post('/api/generate', async (req, res) => {
         const requestBody = {
             "contents": [{
                 "parts": [{
-                    "text": prompt
+                    "text": userPrompt
                 }]
             }]
         }
@@ -28,7 +36,7 @@ app.post('/api/generate', async (req, res) => {
         const reply = await fetch(link, {
             method: 'POST',
             headers: {
-                'content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody)
         });
@@ -39,11 +47,12 @@ app.post('/api/generate', async (req, res) => {
             throw new Error(`Api ERROR:--->${reply.status}    ${errMessage.error.message}`);
         }
         const data = await reply.json();
-        return data.candidates[0].content.parts[0].text.trim();
+        const feedback = data.candidates[0].content.parts[0].text.trim();
+        res.json({ feedback: feedback });
     } catch (error) {
-        alert('Ai error: ' + error.message);
-        console.log('ERROR:--', error);
-        return null
+
+        console.error('ERROR in api:--', error);
+        res.status(500).json({ error: 'An error occured while communicating with the AI.' });
     }
 
 })
