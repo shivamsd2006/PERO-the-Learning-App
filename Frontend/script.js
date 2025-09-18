@@ -98,8 +98,6 @@ function priming() {
 
 
 
-
-
 async function CallAi(prompt) {
     try {
         const response = await fetch('/api/generate', {
@@ -123,10 +121,6 @@ async function CallAi(prompt) {
         return null;
     }
 }
-
-
-
-
 
 
 function makeAnalogie() {
@@ -167,6 +161,110 @@ function makeAnalogie() {
     })
 
 }
+
+function grouping() {
+    const inputValue = document.getElementById('groupedInfo');
+    const uploadBtn = document.getElementById('uploadBtn');
+    uploadBtn.addEventListener('click', async () => {
+        if (inputValue.value.trim() != '') {
+            const content = localStorage.getItem('uploadedContent');
+            const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words`);
+
+            if (feedback) {
+                const p = document.createElement('p');
+                p.innerHTML = feedback;
+                const showFeedback = document.getElementById('showFeedback');
+                showFeedback.appendChild(p);
+            }
+        } else {
+            alert("type/paste your answer");
+        }
+
+    })
+    const genGrouping = document.getElementById('genGrouping');
+    genGrouping.addEventListener('click', async () => {
+        const content = localStorage.getItem('uploadedContent');
+        const response = await CallAi(`create a creative group of this info in under 300 words: ${content}`);
+        if (response) {
+            const p = document.createElement('p');
+            p.innerHTML = response;
+            const showGrouping = document.getElementById('showGrouping');
+            showGrouping.appendChild(p);
+        }
+    })
+}
+function simplify() {
+    const simplifiedText = document.getElementById('simplifiedText');
+    const uploadBtn = document.getElementById('uploadBtn');
+    uploadBtn.addEventListener('click', async () => {
+        if (simplifiedText.value.trim() != '') {
+            const text = simplifiedText.value.trim();
+            const feedback = await CallAi(`give a feedback under 250 words about this text on how much simplied this text really is ${text} realated to this text ${localStorage.getItem('uploadedContent')}`);
+            if (feedback) {
+                alert('getting the feedback');
+                const p = document.createElement('p');
+                p.innerHTML = feedback;
+                const simplifiedFeedback = document.getElementById('simplifiedFeedback');
+                simplifiedFeedback.appendChild(p);
+            }
+        } else {
+            alert('type/paste valid text');
+        }
+
+    })
+    const genSimplifyBtn = document.getElementById('genBtn');
+    genSimplifyBtn.addEventListener('click', async () => {
+        const response = await CallAi(`simplify this text so even a 10 years old can understand ${localStorage.getItem('uploadedContent')}`);
+        if (response) {
+            const p = document.createElement('p');
+            p.innerHTML = response;
+            const showSimplify = document.getElementById('showSimplify');
+            showSimplify.appendChild(p);
+        }
+    })
+}
+
+function retrieval async (){
+    const response = await CallAi(`generate 4 curve Ball questions according to this text:${localStorage.getItem('uploadedContent')} that will hit this topic with multiple angles`);
+    if (response) {
+        alert('Loading questions ');
+        const showQues = document.getElementById('curveBall');
+        const responseArray = response.split(',');
+        for (q of responseArray) {
+            const li = document.createElement('li');
+            showQues.appendChild(li);
+        }
+        const checkBtn = document.getElementById('checkBtn');
+        const ansInput = document.getElementById('ansInput');
+        checkBtn.addEventListener('click', () => {
+            if (ansInput.value.trim() != '') {
+                const ans = ansInput.value.trim();
+                const feedback = await CallAi(`are these anwers correct ${ans} according to these questions${response} give feedback per answer under 100 words`);
+                if (feedback) {
+                    const p = document.createElement('p');
+                    p.innerHTML = feedback;
+                    const ansFeedback = document.getElementById('ansFeedback');
+                    ansFeedback.appendChild(p);
+                }
+            }
+
+        })
+    }
+
+}
+function overlearning async (){
+    const quizQues = document.getElementById('quiz');
+    const ques = await CallAi(`generate 20 curious questions from this text ${localStorage.getItem('uploadedContent')} whose answer should be under 5 - 50 words`);
+    if (ques) {
+        quesArray = ques.split(',');
+        for (k of quesArray) {
+            const li = document.createElement('li');
+            li.innerHTML = quesArray;
+            quizQues.appendChild('li');
+        }
+    }
+
+}
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('fileInput')) {
         welcomePage();
@@ -176,6 +274,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else if (document.getElementById('inputAnalogie')) {
         makeAnalogie();
+    }
+    else if (document.getElementById('groupedInfo')) {
+        grouping();
+    }
+    else if (document.getElementById('simplifiedText')) {
+        simplify();
+    }
+    else if (document.getElementById('curveBall')) {
+        retrieval();
+    }
+    else if (document.getElementById('quiz')) {
+        overlearning();
     }
 
 
