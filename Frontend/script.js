@@ -1,101 +1,93 @@
+const appState = {
+    currentState: 'welcome',
+    uploadedContent: '',
+    retrievalQus: ''
+};
 
-function welcomePage() {
-    let uploadbtn = document.getElementById('uploadbtn');
-    if (uploadbtn) {
-        uploadbtn.addEventListener('click', function () {
-            const textInput = document.getElementById('textInput');
-            const fileInput = document.getElementById('fileInput');
-            if (textInput.value.trim() !== '') {
-                localStorage.setItem('uploadedContent', textInput.value);
-                alert('Content Uploaded')
-                console.log(textInput.value);
-                window.location.href = 'priming.html';
-            }
-            else if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const content = e.target.result;
-                    localStorage.setItem('uploadedContent', content);
-                    alert('File Uploaded Successfully')
-                    window.location.href = 'priming.html'
-                }
-                reader.onerror = () => {
-                    alert('please upload a valid file');
-                }
+function uploadText() {
+    const textInput = document.getElementById('textInput');
+    appState.uploadedContent = textInput.value.trim();
+    alert('Content Uploaded')
+    console.log(appState.uploadedContent);
+    navigateTo('priming');
 
-                if (file.type === 'text/plain') {
-                    reader.readAsText(file);
-                } else {
-                    alert("Unsupported File");
-                }
-            } else {
-                alert('Please Select a Valid File');
-            }
-        })
-    }
 }
 
-function priming() {
-
-    const questionForm = document.getElementById('questionForm');
-    if (questionForm) {
-
-        questionForm.addEventListener('submit', async (e) => {
-            try {
-                e.preventDefault();
-                const questionInput = document.getElementById('questionInput');
-                if (questionInput.value.trim() !== '') {
-                    const questions = questionInput.value.trim();
-                    const data = localStorage.getItem('uploadedContent') || 'No Content Uploaded';
-                    const feedback = await CallAi('As a critical thinker are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic' + data)
-                    if (feedback) {
-                        alert('Questions Uploaded');
-                        document.getElementById('aiFeedback').innerHTML = '<p>' + feedback + '</p>'
-                    }
-
-
-                } else {
-                    alert('Please type your questions');
-                }
-            } catch (error) {
-                alert('Error: ' + error);
-            }
-
-        })
-
+function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            appState.uploadedContent = content;
+            alert('file uploaded successfully');
+            navigateTo('priming');
+        }
+        reader.onerror = () => {
+            alert('please upload a valid file');
+        }
+        if (file.type === 'text/plain') {
+            reader.readAsText(file);
+        } else {
+            alert("Unsupported File");
+        }
+    } else {
+        alert('Please Select a Valid File');
     }
-    const genBtn = document.getElementById('generate');
-    if (genBtn) {
 
-        genBtn.addEventListener('click', async () => {
-            try {
-                console.log("Clicked")
-                const content = localStorage.getItem('uploadedContent') || 'NO Content Uploaded';
-                console.log('PROMPT:------------------', content);
-                const ques = await CallAi('generate 5 curiosity questions from this text:' + content);
-                console.log("QUES------------------", ques);
-                if (ques) {
-                    alert("Generating Questions For You")
-                    const aiGeneratedQuestions = document.getElementById('aiGeneratedQuestions');
-                    const quesArray = ques.split('\n');
-                    for (q of quesArray) {
-                        const list = document.createElement('li');
-                        list.innerHTML = q.trim();
-                        aiGeneratedQuestions.appendChild(list);
-                    }
-
-                }
-            }
-            catch (error) {
-                alert('Error: ' + error);
-            }
-        })
-
-
-    }
 }
 
+
+
+async function submitPrimingQus(e) {
+    try {
+        e.preventDefault();
+        const questionInput = document.getElementById('questionInput');
+        if (questionInput.value.trim() !== '') {
+            const questions = questionInput.value.trim();
+            const data = appState.uploadedContent;
+            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic' + data);
+            if (feedback) {
+                alert('Questions Uploaded');
+                document.getElementById('aiFeedback').innerHTML = '<p>' + feedback + '</p>'
+            }
+
+
+        } else {
+            alert('Please type your questions');
+        }
+    } catch (error) {
+        alert('Error: ' + error);
+    }
+
+}
+
+async function genPrimingQus() {
+    try {
+        console.log("Clicked")
+        const content = appState.uploadedContent;
+        console.log('PROMPT:------------------', content);
+        const ques = await CallAi('Generate 5 engaging curiosity questions for priming based on this text:' + content + '.Number them 1-5 and keep each under 18 words.');
+        console.log("QUES------------------", ques);
+        if (ques) {
+            alert("Generating Questions For You")
+            const aiGeneratedQuestions = document.getElementById('aiGeneratedQuestions');
+            const quesArray = ques.split('\n');
+            const ul = document.createElement('ul');
+            for (q of quesArray) {
+                const list = document.createElement('li');
+                list.innerHTML = q.trim();
+                ul.appendChild(list);
+            }
+            aiGeneratedQuestions.appendChild(ul);
+
+        }
+    }
+    catch (error) {
+        alert('Error: ' + error);
+    }
+}
 
 
 async function CallAi(prompt) {
@@ -103,7 +95,7 @@ async function CallAi(prompt) {
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: {
-                'content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({ prompt: prompt })
 
@@ -123,123 +115,126 @@ async function CallAi(prompt) {
 }
 
 
-function makeAnalogie() {
+async function checkAnalogie() {
     const userInput = document.getElementById('inputAnalogie');
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.addEventListener('click', async () => {
-        if (userInput.value.trim() != '') {
-            const analogie = userInput.value.trim();
-            const content = localStorage.getItem('uploadedContent');
-            const prompt = `As a critical thinker how this analogie :${analogie} makes a connection with this text: ${content}`;
-            const feedback = await CallAi(prompt);
-            if (feedback) {
-                alert('analogie uploaded');
-                const p = document.createElement('p');
-                p.innerHTML = feedback;
-                const feedbackBox = document.getElementById('feedbackBox');
-                feedbackBox.appendChild(p);
-            }
-        } else {
-            alert('Please type/paste your Anologie');
-        }
-    })
-    const generateBtn = document.getElementById('generateBtn');
-    generateBtn.addEventListener('click', async () => {
-        const content = localStorage.getItem('uploadedContent');
-        const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic deeply: ${content} `;
-        const ans = await CallAi(prompt);
-        if (ans) {
-            alert('Creating a analogie for you');
+    if (userInput.value.trim() != '') {
+        const analogie = userInput.value.trim();
+        const content = appState.uploadedContent;
+        const prompt = `As a critical thinker how this analogie :${analogie} makes a connection with this text: ${content}`;
+        const feedback = await CallAi(prompt);
+        if (feedback) {
+            alert('analogie uploaded');
             const p = document.createElement('p');
-            p.innerHTML = ans;
-            const aiAnalogie = document.getElementById('aiAnalogie');
-            aiAnalogie.appendChild(p);
-        } else {
-            alert('Failed to create Analogie');
+            p.innerHTML = feedback;
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.appendChild(p);
         }
-
-    })
+    } else {
+        alert('Please type/paste your Analogie');
+    }
+}
+async function genAnalogie() {
+    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic deeply: ${appState.uploadedContent} `;
+    const ans = await CallAi(prompt);
+    if (ans) {
+        alert('Creating a analogie for you');
+        const p = document.createElement('p');
+        p.innerHTML = ans;
+        const aiAnalogie = document.getElementById('aiAnalogie');
+        aiAnalogie.appendChild(p);
+    } else {
+        alert('Failed to create Analogie');
+    }
 
 }
 
-function grouping() {
+
+
+async function checkGrouping() {
     const inputValue = document.getElementById('groupedInfo');
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.addEventListener('click', async () => {
-        if (inputValue.value.trim() != '') {
-            const content = localStorage.getItem('uploadedContent');
-            const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words`);
+    if (inputValue.value.trim() != '') {
+        const content = appState.uploadedContent;
+        const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words`);
 
-            if (feedback) {
-                const p = document.createElement('p');
-                p.innerHTML = feedback;
-                const showFeedback = document.getElementById('showFeedback');
-                showFeedback.appendChild(p);
-            }
-        } else {
-            alert("type/paste your answer");
-        }
-
-    })
-    const genGrouping = document.getElementById('genGrouping');
-    genGrouping.addEventListener('click', async () => {
-        const content = localStorage.getItem('uploadedContent');
-        const response = await CallAi(`create a creative group of this info in under 300 words: ${content}`);
-        if (response) {
+        if (feedback) {
             const p = document.createElement('p');
-            p.innerHTML = response;
-            const showGrouping = document.getElementById('showGrouping');
-            showGrouping.appendChild(p);
+            p.innerHTML = feedback;
+            const showFeedback = document.getElementById('showFeedback');
+            showFeedback.appendChild(p);
         }
-    })
-}
-function simplify() {
-    const simplifiedText = document.getElementById('simplifiedText');
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.addEventListener('click', async () => {
-        if (simplifiedText.value.trim() != '') {
-            const text = simplifiedText.value.trim();
-            const feedback = await CallAi(`give a feedback under 250 words about this text on how much simplied this text really is ${text} realated to this text ${localStorage.getItem('uploadedContent')}`);
-            if (feedback) {
-                alert('getting the feedback');
-                const p = document.createElement('p');
-                p.innerHTML = feedback;
-                const simplifiedFeedback = document.getElementById('simplifiedFeedback');
-                simplifiedFeedback.appendChild(p);
-            }
-        } else {
-            alert('type/paste valid text');
-        }
-
-    })
-    const genSimplifyBtn = document.getElementById('genBtn');
-    genSimplifyBtn.addEventListener('click', async () => {
-        const response = await CallAi(`simplify this text so even a 10 years old can understand ${localStorage.getItem('uploadedContent')}`);
-        if (response) {
-            const p = document.createElement('p');
-            p.innerHTML = response;
-            const showSimplify = document.getElementById('showSimplify');
-            showSimplify.appendChild(p);
-        }
-    })
+    } else {
+        alert("type/paste your answer");
+    }
 }
 
-function retrieval async (){
-    const response = await CallAi(`generate 4 curve Ball questions according to this text:${localStorage.getItem('uploadedContent')} that will hit this topic with multiple angles`);
+async function genGrouping() {
+    const content = appState.uploadedContent;
+    const response = await CallAi(`create a creative group of this info in under 300 words: ${content}`);
     if (response) {
-        alert('Loading questions ');
-        const showQues = document.getElementById('curveBall');
-        const responseArray = response.split(',');
-        for (q of responseArray) {
-            const li = document.createElement('li');
-            showQues.appendChild(li);
+        const p = document.createElement('p');
+        p.innerHTML = response;
+        const showGrouping = document.getElementById('showGrouping');
+        showGrouping.appendChild(p);
+    }
+}
+
+async function checkSimplify() {
+    const simplifiedText = document.getElementById('simplifiedText');
+    if (simplifiedText.value.trim() != '') {
+        const text = simplifiedText.value.trim();
+        const feedback = await CallAi(`give a feedback under 250 words about this text on how much simplied this text really is ${text} realated to this text ${appState.uploadedContent}`);
+        if (feedback) {
+            alert('getting the feedback');
+            const p = document.createElement('p');
+            p.innerHTML = feedback;
+            const simplifiedFeedback = document.getElementById('simplifiedFeedback');
+            simplifiedFeedback.appendChild(p);
         }
-        const checkBtn = document.getElementById('checkBtn');
-        const ansInput = document.getElementById('ansInput');
-        checkBtn.addEventListener('click', () => {
+    } else {
+        alert('type/paste valid text');
+    }
+
+}
+async function genSimplify() {
+    const response = await CallAi(`simplify this text so even a 10 years old can understand ${appState.uploadedContent}`);
+    if (response) {
+        const p = document.createElement('p');
+        p.innerHTML = response;
+        const showSimplify = document.getElementById('showSimplify');
+        showSimplify.appendChild(p);
+    }
+}
+
+
+async function genRetrievalQus() {
+    try {
+        appState.retrievalQus = await CallAi(`generate 4 curve Ball questions according to this text:${appState.uploadedContent} that will hit this topic with multiple angles`);
+        if (appState.retrievalQus) {
+            alert('Loading questions ');
+            console.log('Retrieval Questions:------------->', response);
+            const showQues = document.getElementById('curveBall');
+            const responseArray = appState.retrievalQus.split('\n');
+            for (q of responseArray) {
+                const li = document.createElement('li');
+                li.textContent = q;
+                showQues.appendChild(li);
+            }
+            checkRetrievalAns();
+        }
+
+    }
+    catch (error) {
+        console.log('error in genRetrievalqus', error);
+    }
+}
+async function checkRetrievalAns() {
+    const checkBtn = document.getElementById('checkBtn');
+    const ansInput = document.getElementById('ansInput');
+    try {
+        checkBtn.addEventListener('click', async () => {
             if (ansInput.value.trim() != '') {
                 const ans = ansInput.value.trim();
-                const feedback = await CallAi(`are these anwers correct ${ans} according to these questions${response} give feedback per answer under 100 words`);
+                const feedback = await CallAi(`are these anwers correct ${ans} according to these questions${appState.retrievalQus} give feedback per answer under 100 words`);
                 if (feedback) {
                     const p = document.createElement('p');
                     p.innerHTML = feedback;
@@ -250,43 +245,294 @@ function retrieval async (){
 
         })
     }
-
+    catch (error) {
+        console.log('error in retrieval', error);
+    }
 }
-function overlearning async (){
-    const quizQues = document.getElementById('quiz');
-    const ques = await CallAi(`generate 20 curious questions from this text ${localStorage.getItem('uploadedContent')} whose answer should be under 5 - 50 words`);
-    if (ques) {
-        quesArray = ques.split(',');
-        for (k of quesArray) {
-            const li = document.createElement('li');
-            li.innerHTML = quesArray;
-            quizQues.appendChild('li');
+
+async function overlearning() {
+    try {
+        const ques = await CallAi(`generate 20 curious questions from this text ${appState.uploadedContent} whose answer should be under 5 - 50 words`);
+        if (ques) {
+            console.log(ques);
+            const quesArray = ques.split('\n');
+            for (k of quesArray) {
+                const li = document.createElement('li');
+                li.textContent = k;
+                quizQues.appendChild(li);
+            }
         }
+    } catch (error) {
+        console.log('error in overlearning', error);
     }
 
 }
+
+function showWelcomePage() {
+    return `
+        <div id="box">
+            <h1>welcome To </h1>
+            <h1>PERO</h1>
+            <h3>Tell me What you Are Learning Today</h3>
+            <div id="search">
+                <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt">
+                    <textarea id="textInput" placeholder="or type/paste your study material"></textarea>
+                    <button id="uploadBtn">upload and go to Priming</button>
+            </div>
+        </div>
+    `
+
+}
+
+function showPrimingPage() {
+    return `
+    <div id="box">
+        <h1>step 1 Priming</h1>
+        <h2>upload your questions about the topic</h2>
+        <p>it is recommended to read the headings and subheadings or skim the topic once and whatever questions buildup
+            on your mind PERO will give you feedback and now read the topic again with the purpose of understanding and
+            keep the questions in your mind read it as you are reading it to answer the questions.</p>
+        <div id="questionFormBox">
+            <form id="questionForm">
+                <input id="questionInput" placeholder="minimum 3-4 questions" type="text">
+                <button type="submit" id="submitBtn">Submit</button>
+            </form>
+        </div>
+
+        <div id="aiFeedback">
+
+        </div>
+
+
+        <h3>or</h3>
+        <h4>let PERO generate questions for you</h4>
+
+        
+        <button id="generate">generate</button>
+        <div id="aiGeneratedQuestions">
+
+        </div>
+        <button id="goToEncoding">Encoding</button>
+
+
+
+    </div>
+    `;
+
+}
+function showEncodingPage() {
+    return `<div id="box">
+        <h1>step 2 Encoding</h1>
+        <p>now it's time to make sense of the info and have a deep understanding of it.</p>
+        <div id="cont">
+            <div class="box">
+                <button id="analogies">Analogies</button>
+            </div>
+            <div class="box">
+                <button id = "simplify">simplify</button>
+            </div>
+            <div class="box">
+                <button id = "grouping">grouping</button>
+            </div>
+        </div>
+        <button id="goToRetrieval" ">retrieval</button>
+
+    </div>`
+}
+function showAnalogiePage() {
+    return `
+     <div id="box">
+        <h1>Learn by making Anologies</h1>
+        <div id="analogieBox">
+            <textarea placeholder="What anologies you can think of ?" id="inputAnalogie"></textarea>
+            <button id="uploadBtn">upload</button>
+        </div>
+        <div id="feedbackBox">
+
+
+        </div>
+        <button id="generateBtn">or let pero make it for you</button>
+        <div id="aiAnalogie">
+
+        </div>
+
+
+    </div>`
+}
+function showSimplifyPage() {
+    return `<div id="box">
+        <h3>write down what you understood,so PERO can check your understanding</h3>
+        <textarea placeholder="" id="simplifiedText"></textarea>
+        <button id="uploadBtn">upload</button>
+        <div id="simplifiedFeedback">
+
+        </div>
+        <h4>or let PERO Simplify it for you</h4>
+        <button id="genBtn">generate</button>
+        <div id="showSimplify">
+
+        </div>
+    </div>`
+}
+function showGroupingPage() {
+    return ` <div id="box">
+        <h2>Group that info here? how that info is realated to your previous knowledge</h2>
+        <textarea placeholder="" id="groupedInfo"></textarea>
+        <button id="uploadBtn">upload</button>
+        <div id="showFeedback">
+
+        </div>
+
+        <h3>let PERO group it for you</h3>
+        
+        <button id="genGrouping">group</button>
+        <div id="showGrouping">
+
+        </div>
+         
+
+    </div>`
+}
+function showRetrievalPage() {
+    return `<div id="box">
+        <h1>step 3 Retrieval</h1>
+        <h2>let's hit this topic with multilple perspectives</h2>
+        <div id="curveBall">
+
+        </div>
+        <h3>can you answer these questions ? </h3>
+        <div id="enter">
+            <textarea placeholder="Enter your Answers" id="ansInput"></textarea>
+            <button id="checkBtn">check</button>
+            <div id="ansFeedback">
+
+            </div>
+        </div>
+        <button id="goToOverlearning">overlearning</button>
+
+    </div>`
+}
+function showOverlearningPage() {
+    return `<div id="box">
+        <h1>step 4 overlearning</h1>
+        <h2>let PERO quiz you on this </h2>
+        <div id="quiz">
+
+        </div>
+
+    </div>`
+}
+
+
+function attachEventListeners() {
+    document.getElementById('main-root').addEventListener('click', (e) => {
+        if (appState.currentState === 'welcome') {
+            if (e.target.id === 'uploadBtn') {
+                if (document.getElementById('textInput').value.trim() !== '') {
+                    uploadText();
+                }
+
+                else if (document.getElementById('fileInput').files.length > 0) {
+                    uploadFile();
+                }
+            }
+        }
+        else if (appState.currentState === 'priming') {
+            if (e.target.id === 'questionForm') {
+                submitPrimingQus();
+            }
+            else if (e.target.id === 'generate') {
+                genPrimingQus();
+            }
+            else if (e.target.id === 'goToEncoding') {
+                navigateTo('encoding');
+            }
+        }
+        else if (appState.currentState === 'encoding') {
+            if (e.target.id === 'analogies') {
+                navigateTo('analogie');
+            }
+            else if (e.target.id === 'simplify') {
+                navigateTo('simplify');
+            }
+            else if (e.target.id === 'grouping') {
+                navigateTo('grouping');
+            }
+            else if (e.target.id === 'retrieval') {
+                navigateTo('retrieval');
+            }
+
+        }
+        else if (appState.currentState === 'analogie') {
+            if (e.target.id === 'uploadBtn') {
+                checkAnalogie();
+            }
+            else if (e.target.id === 'generateBtn') {
+                genAnalogie();
+            }
+        }
+        else if (appState.currentState === 'simplify') {
+            if (e.target.id === 'uploadBtn') {
+                checkSimplify();
+            }
+            else if (e.target.id === 'genBtn') {
+                genSimplify();
+            }
+        }
+        else if (appState.currentState === 'grouping') {
+            if (e.target.id === 'uploadBtn') {
+                checkGrouping();
+            }
+            else if (e.target.id === 'genGrouping') {
+                genGrouping();
+            }
+        }
+        else if (appState.currentState === 'retrieval') {
+            retrieval();
+            if (e.target.id === 'goToOverlearning') {
+                navigateTo('overlearing');
+            };
+        }
+
+    });
+}
+
+function render() {
+    if (appState.currentState === 'welcome') {
+        document.getElementById('main-root').innerHTML = showWelcomePage();
+    }
+    else if (appState.currentState === 'priming') {
+        document.getElementById('main-root').innerHTML = showPrimingPage();
+    }
+    else if (appState.currentState === 'encoding') {
+        document.getElementById('main-root').innerHTML = showEncodingPage();
+    }
+    else if (appState.currentState === 'analogie') {
+        document.getElementById('main-root').innerHTML = showAnalogiePage();
+    }
+    else if (appState.currentState === 'simplify') {
+        document.getElementById('main-root').innerHTML = showSimplifyPage();
+    }
+    else if (appState.currentState === 'grouping') {
+        document.getElementById('main-root').innerHTML = showGroupingPage();
+    }
+    else if (appState.currentState === 'retrieval') {
+        document.getElementById('main-root').innerHTML = showRetrievalPage();
+    }
+    else if (appState.currentState === 'overlearing') {
+        document.getElementById('main-root').innerHTML = showOverlearingPage();
+    }
+    attachEventListeners();
+}
+
+function navigateTo(stage) {
+    appState.currentState = stage;
+    render();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('fileInput')) {
-        welcomePage();
-    }
-    else if (document.getElementById('questionForm')) {
-        priming();
-    }
-    else if (document.getElementById('inputAnalogie')) {
-        makeAnalogie();
-    }
-    else if (document.getElementById('groupedInfo')) {
-        grouping();
-    }
-    else if (document.getElementById('simplifiedText')) {
-        simplify();
-    }
-    else if (document.getElementById('curveBall')) {
-        retrieval();
-    }
-    else if (document.getElementById('quiz')) {
-        overlearning();
-    }
 
-
+    if (document.getElementById('main-root')) {
+        navigateTo('welcome');
+    }
 });
