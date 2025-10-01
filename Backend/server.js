@@ -8,6 +8,8 @@ const app = express();
 const port = 3000;
 const apiKey = process.env.GEMINI_API_KEY;
 
+if (!apiKey) { console.error('No GEMINI_API_KEY in .env'); }
+
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -23,7 +25,7 @@ app.post('/api/generate', async (req, res) => {
             return res.status(400).json({ error: 'Prompt is required' });
         }
 
-        const link = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+        const link = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
         const requestBody = {
             "contents": [{
@@ -32,7 +34,7 @@ app.post('/api/generate', async (req, res) => {
                 }]
             }]
         }
-
+        console.log('DEBUG:----------', link);
         const reply = await fetch(link, {
             method: 'POST',
             headers: {
