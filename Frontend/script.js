@@ -7,8 +7,7 @@ const appState = {
 function uploadText() {
     const textInput = document.getElementById('textInput');
     appState.uploadedContent = textInput.value.trim();
-    alert('Content Uploaded')
-    console.log(appState.uploadedContent);
+    alert('Content Uploaded');
     navigateTo('priming');
 
 }
@@ -65,11 +64,9 @@ async function submitPrimingQus(e) {
 
 async function genPrimingQus() {
     try {
-        console.log("Clicked")
+        console.log(`generting questions for :------------------- ${appState.currentState}`);
         const content = appState.uploadedContent;
-        console.log('PROMPT:------------------', content);
         const ques = await CallAi('Generate 5 engaging curiosity questions for priming based on this text:' + content + '.Number them 1-5 and keep each under 18 words.');
-        console.log("QUES------------------", ques);
         if (ques) {
             alert("Generating Questions For You")
             const aiGeneratedQuestions = document.getElementById('aiGeneratedQuestions');
@@ -211,7 +208,6 @@ async function genRetrievalQus() {
         appState.retrievalQus = await CallAi(`generate 4 curve Ball questions according to this text:${appState.uploadedContent} that will hit this topic with multiple angles`);
         if (appState.retrievalQus) {
             alert('Loading questions ');
-            console.log('Retrieval Questions:------------->', response);
             const showQues = document.getElementById('curveBall');
             const responseArray = appState.retrievalQus.split('\n');
             for (q of responseArray) {
@@ -254,8 +250,9 @@ async function overlearning() {
     try {
         const ques = await CallAi(`generate 20 curious questions from this text ${appState.uploadedContent} whose answer should be under 5 - 50 words`);
         if (ques) {
-            console.log(ques);
+            alert("Generating Questions for Overlearning")
             const quesArray = ques.split('\n');
+            const quizQues = document.getElementById('quiz');
             for (k of quesArray) {
                 const li = document.createElement('li');
                 li.textContent = k;
@@ -425,6 +422,7 @@ function showOverlearningPage() {
 
 
 function attachEventListeners() {
+    console.log(`attaching the listener on page:----------------${appState.currentState}`);
     document.getElementById('main-root').addEventListener('click', (e) => {
         if (appState.currentState === 'welcome') {
             if (e.target.id === 'uploadBtn') {
@@ -458,7 +456,7 @@ function attachEventListeners() {
             else if (e.target.id === 'grouping') {
                 navigateTo('grouping');
             }
-            else if (e.target.id === 'retrieval') {
+            else if (e.target.id === 'goToRetrieval') {
                 navigateTo('retrieval');
             }
 
@@ -488,7 +486,6 @@ function attachEventListeners() {
             }
         }
         else if (appState.currentState === 'retrieval') {
-            retrieval();
             if (e.target.id === 'goToOverlearning') {
                 navigateTo('overlearing');
             };
@@ -496,8 +493,14 @@ function attachEventListeners() {
 
     });
 }
-
+window.addEventListener('popstate', (event) => {
+    if (event.state) {
+        appState.currentState = event.state.page;
+        render();
+    }
+})
 function render() {
+    console.log(`render function called for:----------------------------- ${appState.currentState}`);
     if (appState.currentState === 'welcome') {
         document.getElementById('main-root').innerHTML = showWelcomePage();
     }
@@ -518,21 +521,28 @@ function render() {
     }
     else if (appState.currentState === 'retrieval') {
         document.getElementById('main-root').innerHTML = showRetrievalPage();
+        genRetrievalQus();
     }
     else if (appState.currentState === 'overlearing') {
-        document.getElementById('main-root').innerHTML = showOverlearingPage();
+        document.getElementById('main-root').innerHTML = showOverlearningPage();
+        overlearning();
     }
-    attachEventListeners();
+
 }
 
 function navigateTo(stage) {
     appState.currentState = stage;
+    history.pushState({ page: stage }, '', `#$/{stage}`);
     render();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
     if (document.getElementById('main-root')) {
+        attachEventListeners();
+
         navigateTo('welcome');
     }
+
+
 });
