@@ -56,7 +56,6 @@ app.post('/api/generate', async (req, res) => {
         console.error('ERROR in api:--', error);
         res.status(500).json({ error: 'An error occured while communicating with the AI.' });
     }
-
 })
 
 
