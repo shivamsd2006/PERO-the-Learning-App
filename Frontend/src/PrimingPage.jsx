@@ -1,26 +1,4 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-
-function Welcome() {
-  return (
-    <>
-      <div id="box">
-        <h1>welcome To </h1>
-        <h1>PERO</h1>
-        <h3>Tell me What you Are Learning Today</h3>
-        <div id="search">
-          <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt">
-            <textarea id="textInput" placeholder="or type/paste your study material"></textarea>
-            <button id="uploadBtn">upload and go to Priming</button>
-        </div>
-      </div>
-
-    </>
-  );
-}
-
-function Priming(){
+function PrimingPage(){
   return(
     <>
     <div id="box">
@@ -31,7 +9,7 @@ function Priming(){
             keep the questions in your mind read it as you are reading it to answer the questions.</p>
         <div id="questionFormBox">
             <form id="questionForm">
-                <input id="questionInput" placeholder="minimum 3-4 questions" type="text">
+                <input id="questionInput" placeholder="minimum 3-4 questions" type="text"/>
                 <button type="submit" id="submitBtn">Submit</button>
             </form>
         </div>
@@ -58,5 +36,4 @@ function Priming(){
   );
 }
 
-export  Welcome 
-export  Priming
+export default PrimingPage
