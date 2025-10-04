@@ -10,7 +10,7 @@ function WelcomePage() {
         <div id="search">
           <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt"/>
             <textarea id="textInput" placeholder="or type/paste your study material"></textarea>
-            <button id="uploadBtn">upload and go to Priming</button>
+            <button id="uploadBtn" onClick={onUpload} >upload and go to Priming</button>
         </div>
       </div>
 
