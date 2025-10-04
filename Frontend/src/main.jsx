@@ -13,6 +13,6 @@ import OverlearningPage from './OverlearningPage'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <WelcomePage />
   </StrictMode>,
 )
