@@ -46,7 +46,7 @@ async function submitPrimingQus(e) {
         if (questionInput.value.trim() !== '') {
             const questions = questionInput.value.trim();
             const data = appState.uploadedContent;
-            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic' + data);
+            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic ' + data);
             if (feedback) {
                 alert('Questions Uploaded');
                 document.getElementById('aiFeedback').innerHTML = '<p>' + feedback + '</p>'
@@ -131,7 +131,7 @@ async function checkAnalogie() {
     }
 }
 async function genAnalogie() {
-    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic deeply: ${appState.uploadedContent} `;
+    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic: ${appState.uploadedContent} `;
     const ans = await CallAi(prompt);
     if (ans) {
         alert('Creating a analogie for you');
@@ -291,7 +291,7 @@ function showPrimingPage() {
             keep the questions in your mind read it as you are reading it to answer the questions.</p>
         <div id="questionFormBox">
             <form id="questionForm">
-                <input id="questionInput" placeholder="minimum 3-4 questions" type="text">
+                <textarea id="questionInput" placeholder="minimum 3-4 questions" type="text" </textarea>
                 <button type="submit" id="submitBtn">Submit</button>
             </form>
         </div>
