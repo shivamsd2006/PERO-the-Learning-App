@@ -46,10 +46,10 @@ async function submitPrimingQus(e) {
         if (questionInput.value.trim() !== '') {
             const questions = questionInput.value.trim();
             const data = appState.uploadedContent;
-            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic ' + data);
+            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic ' + data+'under 300 words.'+'Format your response as an HTML list with <h3>,<p><ul> and <li> tags.');
             if (feedback) {
                 alert('Questions Uploaded');
-                document.getElementById('aiFeedback').innerHTML = '<p>' + feedback + '</p>'
+                document.getElementById('aiFeedback').innerHTML = feedback;
             }
 
 
@@ -110,28 +110,24 @@ async function checkAnalogie() {
     if (userInput.value.trim() != '') {
         const analogie = userInput.value.trim();
         const content = appState.uploadedContent;
-        const prompt = `As a critical thinker how this analogie :${analogie} makes a connection with this text: ${content}`;
+        const prompt = `As a critical thinker how this analogie :${analogie} makes a connection with this text: ${content} explain under 300 words.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`;
         const feedback = await CallAi(prompt);
         if (feedback) {
             alert('analogie uploaded');
-            const p = document.createElement('p');
-            p.innerHTML = feedback;
             const feedbackBox = document.getElementById('feedbackBox');
-            feedbackBox.appendChild(p);
+            feedbackBox.innerHTML = feedback;
         }
     } else {
         alert('Please type/paste your Analogie');
     }
 }
 async function genAnalogie() {
-    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic: ${appState.uploadedContent} `;
+    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic: ${appState.uploadedContent} Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`;
     const ans = await CallAi(prompt);
     if (ans) {
         alert('Creating a analogie for you');
-        const p = document.createElement('p');
-        p.innerHTML = ans;
         const aiAnalogie = document.getElementById('aiAnalogie');
-        aiAnalogie.appendChild(p);
+        aiAnalogie.innerHTML = ans;
     } else {
         alert('Failed to create Analogie');
     }
@@ -144,13 +140,11 @@ async function checkGrouping() {
     const inputValue = document.getElementById('groupedInfo');
     if (inputValue.value.trim() != '') {
         const content = appState.uploadedContent;
-        const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words`);
+        const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
 
         if (feedback) {
-            const p = document.createElement('p');
-            p.innerHTML = feedback;
             const showFeedback = document.getElementById('showFeedback');
-            showFeedback.appendChild(p);
+            showFeedback.innerHTML = feedback;
         }
     } else {
         alert("type/paste your answer");
@@ -159,12 +153,10 @@ async function checkGrouping() {
 
 async function genGrouping() {
     const content = appState.uploadedContent;
-    const response = await CallAi(`create a creative group of this info in under 300 words: ${content}`);
+    const response = await CallAi(`create a creative group of this info in under 300 words: ${content}. Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
     if (response) {
-        const p = document.createElement('p');
-        p.innerHTML = response;
         const showGrouping = document.getElementById('showGrouping');
-        showGrouping.appendChild(p);
+        showGrouping.innerHTML = response;
     }
 }
 
@@ -172,13 +164,10 @@ async function checkSimplify() {
     const simplifiedText = document.getElementById('simplifiedText');
     if (simplifiedText.value.trim() != '') {
         const text = simplifiedText.value.trim();
-        const feedback = await CallAi(`give a feedback under 250 words about this text on how much simplied this text really is ${text} realated to this text ${appState.uploadedContent}`);
+        const feedback = await CallAi(`give a feedback under 250 words about this text on how much simplied this text really is ${text} realated to this text ${appState.uploadedContent}.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
         if (feedback) {
-            alert('getting the feedback');
-            const p = document.createElement('p');
-            p.innerHTML = feedback;
             const simplifiedFeedback = document.getElementById('simplifiedFeedback');
-            simplifiedFeedback.appendChild(p);
+            simplifiedFeedback.innerHTML = feedback;
         }
     } else {
         alert('type/paste valid text');
@@ -186,28 +175,22 @@ async function checkSimplify() {
 
 }
 async function genSimplify() {
-    const response = await CallAi(`simplify this text so even a 10 years old can understand ${appState.uploadedContent}`);
+    const response = await CallAi(`simplify this text so even a 10 years old can understand ${appState.uploadedContent}. Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
     if (response) {
-        const p = document.createElement('p');
-        p.innerHTML = response;
         const showSimplify = document.getElementById('showSimplify');
-        showSimplify.appendChild(p);
+        showSimplify.innerHTML = response;
     }
 }
 
 
 async function genRetrievalQus() {
     try {
-        appState.retrievalQus = await CallAi(`generate 4 curve Ball questions according to this text:${appState.uploadedContent} that will hit this topic with multiple angles`);
+        appState.retrievalQus = await CallAi(`generate 4 curve Ball questions according to this text:${appState.uploadedContent} that will hit this topic with multiple angles.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
         if (appState.retrievalQus) {
             alert('Loading questions ');
             const showQues = document.getElementById('curveBall');
-            const responseArray = appState.retrievalQus.split('\n');
-            for (q of responseArray) {
-                const li = document.createElement('li');
-                li.textContent = q;
-                showQues.appendChild(li);
-            }
+                showQues.innerHTML = appState.retrievalQus;
+            
             checkRetrievalAns();
         }
 
@@ -223,12 +206,10 @@ async function checkRetrievalAns() {
         checkBtn.addEventListener('click', async () => {
             if (ansInput.value.trim() != '') {
                 const ans = ansInput.value.trim();
-                const feedback = await CallAi(`are these anwers correct ${ans} according to these questions${appState.retrievalQus} give feedback per answer under 100 words`);
+                const feedback = await CallAi(`are these anwers correct ${ans} according to these questions${appState.retrievalQus} give feedback per answer under 100 words.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
                 if (feedback) {
-                    const p = document.createElement('p');
-                    p.innerHTML = feedback;
                     const ansFeedback = document.getElementById('ansFeedback');
-                    ansFeedback.appendChild(p);
+                    ansFeedback.innerHTML = feedback;
                 }
             }
 
@@ -284,7 +265,7 @@ function showPrimingPage() {
             keep the questions in your mind read it as you are reading it to answer the questions.</p>
         <div id="questionFormBox">
             <form id="questionForm">
-                <textarea id="questionInput" placeholder="minimum 3-4 questions" type="text" </textarea>
+                <textarea id="questionInput" placeholder="minimum 3-4 questions"></textarea>
                 <button type="submit" id="submitBtn">Submit</button>
             </form>
         </div>
@@ -429,10 +410,7 @@ function attachEventListeners() {
             }
         }
         else if (appState.currentState === 'priming') {
-            if (e.target.id === 'questionForm') {
-                submitPrimingQus();
-            }
-            else if (e.target.id === 'generate') {
+            if (e.target.id === 'generate') {
                 genPrimingQus();
             }
             else if (e.target.id === 'goToEncoding') {
@@ -530,12 +508,22 @@ function navigateTo(stage) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const id = document.getElementById('main-root');
 
-    if (document.getElementById('main-root')) {
+    if (id) {
         attachEventListeners();
 
         navigateTo('welcome');
+
+        id.addEventListener('submit', (e) => {
+            const id = e.target.id;
+            if (id === 'questionForm') {
+
+                submitPrimingQus(e);
+            }
+        });
     }
+
 
 
 });
