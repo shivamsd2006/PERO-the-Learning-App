@@ -65,19 +65,12 @@ async function submitPrimingQus(e) {
 async function genPrimingQus() {
     try {
         console.log(`generting questions for :------------------- ${appState.currentState}`);
-        const content = appState.uploadedContent;
-        const ques = await CallAi('Generate 5 engaging curiosity questions for priming based on this text:' + content + '.Number them 1-5 and keep each under 18 words.');
+        const ques = await CallAi(`Generate 5 curiosity questions from this text: ${appState.uploadedContent}. Please format your response as an HTML list with <ul> and <li> tags.`);
         if (ques) {
             alert("Generating Questions For You")
             const aiGeneratedQuestions = document.getElementById('aiGeneratedQuestions');
-            const quesArray = ques.split('\n');
-            const ul = document.createElement('ul');
-            for (q of quesArray) {
-                const list = document.createElement('li');
-                list.innerHTML = q.trim();
-                ul.appendChild(list);
-            }
-            aiGeneratedQuestions.appendChild(ul);
+
+            aiGeneratedQuestions.innerHTML = ques;
 
         }
     }
