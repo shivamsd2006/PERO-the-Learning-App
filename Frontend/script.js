@@ -46,7 +46,36 @@ async function submitPrimingQus(e) {
         if (questionInput.value.trim() !== '') {
             const questions = questionInput.value.trim();
             const data = appState.uploadedContent;
-            const feedback = await CallAi('As a critical thinker,are these questions good for curiosity:' + questions + '?' + 'provide detailed feedback,improvements for topic ' + data+'under 300 words.'+'Format your response as an HTML list with <h3>,<p><ul> and <li> tags.');
+            const feedback = await CallAi(`
+You are an expert learning coach providing structured, clear feedback.
+
+Analyze the following questions based on the study topic.
+
+**Study Topic:**
+"${appState.uploadedContent}"
+
+**User's Questions:**
+"${questions}"
+
+Return your response STRICTLY in valid HTML — not Markdown. 
+✅ Use:
+- <h3> for section headings
+- <ul> and <li> for bullet points
+- No asterisks (*), hashes (#), or Markdown formatting
+- No explanations before or after
+
+Final HTML structure example:
+<h3>Strengths</h3>
+<ul>
+  <li>First strength...</li>
+  <li>Second strength...</li>
+</ul>
+<h3>Areas for Improvement</h3>
+<ul>
+  <li>First improvement...</li>
+  <li>Second improvement...</li>
+</ul>
+`);
             if (feedback) {
                 alert('Questions Uploaded');
                 document.getElementById('aiFeedback').innerHTML = feedback;
@@ -65,7 +94,16 @@ async function submitPrimingQus(e) {
 async function genPrimingQus() {
     try {
         console.log(`generting questions for :------------------- ${appState.currentState}`);
-        const ques = await CallAi(`Generate 5 curiosity questions from this text: ${appState.uploadedContent}. Please format your response as an HTML list with <ul> and <li> tags.`);
+        const ques = await CallAi(`
+You are an expert educator. Your task is to generate exactly 5 engaging and curiosity-driven questions based on the following text.
+
+**Text:**
+"${appState.uploadedContent}"
+
+Your response must be ONLY an HTML ordered list (<ol> and <li> tags).
+Do not include any other text, headings, or introductions.
+Each question should be concise and designed to make a student want to find the answer in the text.
+`);
         if (ques) {
             alert("Generating Questions For You")
             const aiGeneratedQuestions = document.getElementById('aiGeneratedQuestions');
@@ -110,7 +148,17 @@ async function checkAnalogie() {
     if (userInput.value.trim() != '') {
         const analogie = userInput.value.trim();
         const content = appState.uploadedContent;
-        const prompt = `As a critical thinker how this analogie :${analogie} makes a connection with this text: ${content} explain under 300 words.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`;
+        const prompt = `
+You are a critical thinking specialist. Analyze the user's analogy and explain how well it connects to the core concepts of the provided text.
+
+**Source Text:**
+"${appState.uploadedContent}"
+
+**User's Analogy:**
+"${analogie}"
+
+Provide your feedback in simple HTML, using <p> tags for paragraphs. Start directly with the analysis.
+`;
         const feedback = await CallAi(prompt);
         if (feedback) {
             alert('analogie uploaded');
@@ -122,7 +170,14 @@ async function checkAnalogie() {
     }
 }
 async function genAnalogie() {
-    const prompt = `As a critical thinker make 2 analogies under 150 words for understanding this topic: ${appState.uploadedContent} Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`;
+    const prompt = `
+You are a creative teacher. Your task is to generate 2 distinct analogies to help someone deeply understand the following text.
+
+**Source Text:**
+"${appState.uploadedContent}"
+
+Format your response in simple HTML. For each analogy, use an <h3> heading for the analogy's title (e.g., "### The Garden Analogy") and <p> tags for the explanation. Keep the total response under 150 words.
+`;
     const ans = await CallAi(prompt);
     if (ans) {
         alert('Creating a analogie for you');
@@ -139,8 +194,15 @@ async function genAnalogie() {
 async function checkGrouping() {
     const inputValue = document.getElementById('groupedInfo');
     if (inputValue.value.trim() != '') {
-        const content = appState.uploadedContent;
-        const feedback = await CallAi(`${inputValue.value.trim()}is this grouping of info  logically correct according to this text ${content} give a feedback in 300 words.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
+        const feedback = await CallAi(`
+You are an expert at information synthesis. Your task is to read the following text and organize its main ideas into logical groups.
+
+**Source Text:**
+"${appState.uploadedContent}"
+
+Create a summary by grouping the key concepts. Your response must be formatted in simple HTML. Use an <h3> heading for each main group title and an unordered list (<ul> and <li>) for the points within each group.
+Do not include any conversational preamble.
+`);
 
         if (feedback) {
             const showFeedback = document.getElementById('showFeedback');
@@ -153,7 +215,15 @@ async function checkGrouping() {
 
 async function genGrouping() {
     const content = appState.uploadedContent;
-    const response = await CallAi(`create a creative group of this info in under 300 words: ${content}. Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
+    const response = await CallAi(`
+You are an expert at information synthesis. Your task is to read the following text and organize its main ideas into logical groups.
+
+**Source Text:**
+"${appState.uploadedContent}"
+
+Create a summary by grouping the key concepts. Your response must be ONLY formatted in simple HTML. Use an <h3> heading for each main group title and an unordered list (<ul> and <li>) for the points within each group.
+Do not include any conversational preamble.
+`);
     if (response) {
         const showGrouping = document.getElementById('showGrouping');
         showGrouping.innerHTML = response;
@@ -185,12 +255,20 @@ async function genSimplify() {
 
 async function genRetrievalQus() {
     try {
-        appState.retrievalQus = await CallAi(`generate 4 curve Ball questions according to this text:${appState.uploadedContent} that will hit this topic with multiple angles.Format your response as an HTML list with <h3>,<p><ul> and <li> tags.`);
+        appState.retrievalQus = await CallAi(`
+You are a Socratic questioner. Your goal is to test for deep understanding, not simple fact recall. Generate exactly 4 thought-provoking, "curveball" questions based on the provided text. These questions should challenge the user to think about the topic from a new perspective.
+
+**Source Text:**
+"${appState.uploadedContent}"
+
+Your response must be ONLY an HTML ordered list (<ol> and <li> tags).
+Do not include any other text or introduction.
+`);
         if (appState.retrievalQus) {
             alert('Loading questions ');
             const showQues = document.getElementById('curveBall');
-                showQues.innerHTML = appState.retrievalQus;
-            
+            showQues.innerHTML = appState.retrievalQus;
+
             checkRetrievalAns();
         }
 
@@ -242,8 +320,10 @@ async function overlearning() {
 function showWelcomePage() {
     return `
         <div id="box">
+           <div id ="header">
             <h1>welcome To </h1>
             <h1>PERO</h1>
+           </div>
             <h3>Tell me What you Are Learning Today</h3>
             <div id="search">
                 <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt">
@@ -260,9 +340,7 @@ function showPrimingPage() {
     <div id="box">
         <h1>step 1 Priming</h1>
         <h2>upload your questions about the topic</h2>
-        <p>it is recommended to read the headings and subheadings or skim the topic once and whatever questions buildup
-            on your mind PERO will give you feedback and now read the topic again with the purpose of understanding and
-            keep the questions in your mind read it as you are reading it to answer the questions.</p>
+        <p>Skim the topic first, note your questions, then read again — PERO gives feedback and helps you understand deeply.</p>
         <div id="questionFormBox">
             <form id="questionForm">
                 <textarea id="questionInput" placeholder="minimum 3-4 questions"></textarea>
