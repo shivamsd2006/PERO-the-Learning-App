@@ -8,44 +8,29 @@ import RetrievalPage from './RetrievalPage'
 import OverlearningPage from './OverlearningPage'
 import { useState } from 'react'
 
-const [content, setContent] = useState('');
-const [page, setPage] = useState('');
+function App() {
 
-setContent(c){
-    content = c;
-}
+    const [content, setContent] = useState('');
+    const [currentPage, setCurrentPage] = useState('WelcomePage');
 
-function handleContentUpload() {
-    if (textInput.value.trim() != '') {
-        setContent(textInput.value.trim());
-        alert('Content Uploaded');
-    }
-    else if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const content = e.target.result;
-            setContent(content);
-            alert('file uploaded successfully');
-        }
-        reader.onerror = () => {
-            alert('please upload a valid file');
-        }
-        if (file.type === 'text/plain') {
-            reader.readAsText(file);
-        } else {
-            alert("Unsupported File");
-        }
-    }
-    else if (textInput.value == '' && fileInput.files.length == 0) {
-        alert("Paste/type text or upload a file");
-    }
-}
-return (
-    <>
-        <WelcomePage> onUpload = {handleContentUpload}</WelcomePage>
 
-    </>
-);
+    const handleContentUpload = (text) => {
+        setContent(text);
+
+        setCurrentPage('PrimingPage');
+
+    };
+
+
+    return (
+        <main>
+            {currentPage === 'WelcomePage' && (
+                <WelcomePage onUpload={handleContentUpload} />
+            )}
+            {currentPage === 'PrimingPage' && (
+                <PrimingPage content={content}/>
+            )}
+        </main>
+    );
 }
 export default App

@@ -1,4 +1,9 @@
+import { useState } from "react"
+import { CallAi } from "./api"
+
 function EncodingPage() {
+    
+
     return (
         <>
             <div id="box">
@@ -6,13 +11,13 @@ function EncodingPage() {
                 <p>now it's time to make sense of the info and have a deep understanding of it.</p>
                 <div id="cont">
                     <div class="box">
-                        <button id="analogies">Analogies</button>
+                        <button onClick={toAnalogies} id="analogies">Analogies</button>
                     </div>
                     <div class="box">
-                        <button id="simplify">simplify</button>
+                        <button onClick={toSimplify} id="simplify">simplify</button>
                     </div>
                     <div class="box">
-                        <button id="grouping">grouping</button>
+                        <button onClick={toGrouping} id="grouping">grouping</button>
                     </div>
                 </div>
                 <button id="goToRetrieval" >retrieval</button>
