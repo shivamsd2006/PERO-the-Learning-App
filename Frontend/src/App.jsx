@@ -20,6 +20,27 @@ function App() {
         setCurrentPage('PrimingPage');
 
     };
+    const toEncoding = () => {
+        setCurrentPage('EncodingPage');
+    }
+
+    const toAnalogy = () => {
+        setCurrentPage('AnalogyPage');
+    }
+
+    const toGrouping = () => {
+        setCurrentPage('GroupingPage');
+    }
+    const toSimplify = () => {
+        setCurrentPage('SimplifyPage');
+    }
+
+    const toRetrieval = () => {
+        setCurrentPage('RetrievalPage');
+    }
+    const toOverlearning = ()=>{
+        setCurrentPage('OverlearningPage');
+    } 
 
 
     return (
@@ -28,9 +49,39 @@ function App() {
                 <WelcomePage onUpload={handleContentUpload} />
             )}
             {currentPage === 'PrimingPage' && (
-                <PrimingPage content={content}/>
+                <PrimingPage content={content}
+                    onEncoding={toEncoding}
+                />
+
             )}
-        </main>
+            {currentPage === 'EncodingPage' && (
+                <EncodingPage
+                    onAnalogy={toAnalogy}
+                    onGrouping={toGrouping}
+                    onSimplify={toSimplify}
+                    onRetrieval={toRetrieval} />
+            )}
+            {currentPage === 'AnalogyPage' && (
+                <AnalogyPage
+                    content={content} />
+            )}
+            {currentPage === 'SimplifyPage' && (
+                <SimplifyPage
+                    content={content} />
+            )}
+            {currentPage === 'GroupingPage' && (
+                <GroupingPage
+                    content={content} />
+            )}
+            {currentPage === 'RetrievalPage' && (
+                <RetrievalPage
+                    content={content}
+                    onOverlearning={toOverlearning} />
+            )}
+            {currentPage === 'OverlearningPage'&&
+              <OverlearningPage content ={content} />
+            }
+        </main >
     );
 }
 export default App

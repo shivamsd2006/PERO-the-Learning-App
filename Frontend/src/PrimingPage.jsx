@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { CallAi } from "./api";
-function PrimingPage({ content }) {
+
+
+
+function PrimingPage({ content,onEncoding }) {
   const [qus, setQus] = useState('');
   const [feedback, setFeedbck] = useState('');
   const [aiQus, setAiQus] = useState('');
@@ -59,7 +62,7 @@ function PrimingPage({ content }) {
         <div
           dangerouslySetInnerHTML={{ __html: aiQus }} />
 
-        <button id="goToEncoding">Encoding</button>
+        <button onClick={onEncoding} id="goToEncoding">Encoding</button>
 
 
 
