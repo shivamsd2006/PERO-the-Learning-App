@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { CallAi } from "./api";
+import { useOutletContext } from "react-router-dom";
 
 
-
-function PrimingPage({ content,onEncoding }) {
+function PrimingPage() {
+  const{content} = useOutletContext();
   const [qus, setQus] = useState('');
   const [feedback, setFeedbck] = useState('');
   const [aiQus, setAiQus] = useState('');
@@ -13,7 +14,36 @@ function PrimingPage({ content,onEncoding }) {
     try {
       event.preventDefault();
       if (qus.trim() != '') {
-        const response = await CallAi(`As a critical thinker are these questions good for curiosity ${qus}? provide detailed feedback for the topic ${content}`);
+        const response = await CallAi(`
+You are an expert learning coach providing structured, clear feedback.
+
+Analyze the following questions based on the study topic.
+
+**Study Topic:**
+"${content}"
+
+**User's Questions:**
+"${qus}"
+
+Return your response STRICTLY in valid HTML — not Markdown. 
+ Use:
+- <h3> for section headings
+- <ul> and <li> for bullet points
+- No asterisks (*), hashes (#), or Markdown formatting
+- No explanations before or after
+
+Final HTML structure example:
+<h3>Strengths</h3>
+<ul>
+  <li>First strength...</li>
+  <li>Second strength...</li>
+</ul>
+<h3>Areas for Improvement</h3>
+<ul>
+  <li>First improvement...</li>
+  <li>Second improvement...</li>
+</ul>
+`);
         if (response) {
           setFeedbck(response);
         }
@@ -27,7 +57,14 @@ function PrimingPage({ content,onEncoding }) {
 
   async function generateQus() {
     try {
-      const response = await CallAi(`As a Critical thinker generate 5 curiosity questions from this text: ${content}`);
+      const response = await CallAi(`
+You are an expert educator. Your task is to generate exactly 6 engaging and curiosity-driven questions based on the following text.Text:
+"${content}"
+
+Your response must be ONLY an HTML ordered list (<ol> and <li> tags).
+Do not include any other text, headings, or introductions.
+Each question should be concise and designed to make a student want to find the answer in the text.
+`);
       if (response) {
         setAiQus(response);
       }
@@ -62,7 +99,7 @@ function PrimingPage({ content,onEncoding }) {
         <div
           dangerouslySetInnerHTML={{ __html: aiQus }} />
 
-        <button onClick={onEncoding} id="goToEncoding">Encoding</button>
+        <button  id="goToEncoding">Encoding</button>
 
 
 

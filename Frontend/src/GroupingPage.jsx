@@ -4,12 +4,11 @@ import { CallAi } from "./api.js";
 function GroupingPage({ content }) {
     const [info, setInfo] = useState('');
     const [feedback, setFeedback] = useState('');
-    const [grouping, setGrouping] = useState('');
 
 
     async function submitGrouping() {
         if (info.trim() !== '') {
-            const response = await CallAi(`is this gropuing rigght give feedback${info} made from this text ${content}`);
+            const response = await CallAi();
             if (response) {
                 setFeedback(response);
             }
@@ -17,7 +16,15 @@ function GroupingPage({ content }) {
     }
 
    async function genGrouping() {
-        const response = await CallAi(`Genertae a grouping from this text${content}`);
+        const response = await CallAi(`
+You are an expert at information synthesis. Your task is to read the following text and organize its main ideas into logical groups.
+
+Source Text
+"${appState.uploadedContent}"
+
+Create a summary by grouping the key concepts. Your response must be ONLY formatted in simple HTML. Use an <h3> heading for each main group title and an unordered list (<ul> and <li>) for the points within each group.
+Do not include any conversational preamble.
+`);
         if (response) {
             setGrouping(response);
         }

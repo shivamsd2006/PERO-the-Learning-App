@@ -9,7 +9,14 @@ function AnalogyPage({ content }) {
 
 
             if (analogie.trim() !== '') {
-                const response = await CallAi(`give feedback on this analogie ${analogie} made by this text ${content}`);
+                const response = await CallAi(`
+You are a critical thinker. Analyze the user's analogy and explain how well it connects to the core concepts of the provided text.Source Text:
+"${content}"
+User's Analogy:
+"${analogie}"
+
+Provide your feedback in simple HTML, using <p> tags for paragraphs. Start directly with the analysis.
+`);
                 if (response) {
                     setFeedback(response);
                 }
@@ -21,7 +28,13 @@ function AnalogyPage({ content }) {
 
 
     async function genAnalogie() {
-        const response = await CallAi(`create a creative analogie from this text ${content}`)
+        const response = await CallAi(`
+You are a creative teacher. Your task is to generate 2 distinct analogies to help someone deeply understand the following text.
+Source Text:
+"${content}"
+
+Format your response in simple HTML. For each analogy, use an <h3> heading for the analogy's title (e.g., "The Garden Analogy") and <p> tags for the explanation. Keep the total response under 150 words.
+`)
         if (response) {
             setReceive(response);
         }

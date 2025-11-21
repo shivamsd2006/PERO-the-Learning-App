@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
-function WelcomePage({onUpload}) {
+
+
+function WelcomePage() {
+  const{onUpload} = useOutletContext();
   const [text, setText] = useState("");
 
   function handleText() {
@@ -14,17 +19,30 @@ function WelcomePage({onUpload}) {
 
   return (
     <>
-      <div id="box">
-        <h1>welcome To </h1>
-        <h1>PERO</h1>
-        <h3>Tell me What you Are Learning Today</h3>
-        <div id="search">
-          <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt" />
-          <textarea id="textInput" placeholder="or type/paste your study material" value={text} onChange={(e) => setText(e.target.value)}></textarea>
-          <button id="uploadBtn" onClick={handleText} >upload and go to Priming</button>
-        </div>
-      </div>
+      <section>
+        <div className="max-w-[1300px] min-h-[100vh] ">
 
+          <div className="mt-10">
+            <h1 className="text-2xl font-bold"> Welcome To <br /><span className="text-blue-600">PERO</span></h1>
+          </div>
+          <div>
+            <p className="text-xl mt-3 font-semibold">Tell me what you are Learning Today?</p>
+          </div>
+
+
+          <div className="flex-col">
+            <div>
+              <input id="fileInput" placeholder="Upload PDF/image/text" type="file" accept=".pdf,.jpg,.png,.txt" />
+            </div>
+            <div>
+              <textarea id="textInput" placeholder="or type/paste your study material" value={text} onChange={(e) => setText(e.target.value)}></textarea>
+            </div>
+          </div>
+
+          <button onClick={handleText} >upload and go to Priming</button>
+          <Link to="/Priming" onClick={handleText}>upload and go to Priming</Link>
+        </div>
+      </section >
     </>
   );
 }
