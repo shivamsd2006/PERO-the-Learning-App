@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { CallAi } from "./api.js";
+import { useOutletContext } from "react-router-dom";
 
-function SimplifyPage({ content }) {
+function SimplifyPage() {
+    const {content} = useOutletContext();
     const [text, setText] = useState('');
     const [feedback, setFeedback] = useState('');
     const [ans, setAns] = useState('');

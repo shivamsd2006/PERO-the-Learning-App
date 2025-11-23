@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { CallAi } from "./api";
-function OverlearningPage({ content }) {
+import { useOutletContext } from "react-router-dom";
+function OverlearningPage() {
+    const {content} = useOutletContext();
     const [qus, setQus] = useState('');
     const [isLoading, setIsLoading] = useState(true)
 

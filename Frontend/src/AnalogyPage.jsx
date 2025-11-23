@@ -1,6 +1,8 @@
 import {  useState } from "react"
 import { CallAi } from "./api.js";
-function AnalogyPage({ content }) {
+import { useOutletContext } from "react-router-dom";
+function AnalogyPage() {
+    const {content} = useOutletContext();
     const [analogie, setAnalogie] = useState('');
     const [feedback, setFeedback] = useState('');
     const [receive, setReceive] = useState('');

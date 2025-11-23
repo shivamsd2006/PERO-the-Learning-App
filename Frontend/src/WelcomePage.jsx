@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
-
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 
 function WelcomePage() {
   const{onUpload} = useOutletContext();
   const [text, setText] = useState("");
+  const navigate = useNavigate();
 
   function handleText() {
     if (text.trim() != '') {
       onUpload(text);
       alert('content uploaded');
+      navigate('/priming');
     } else {
       alert('Paste your content');
     }
@@ -40,7 +40,7 @@ function WelcomePage() {
           </div>
 
           <button onClick={handleText} >upload and go to Priming</button>
-          <Link to="/Priming" onClick={handleText}>upload and go to Priming</Link>
+          
         </div>
       </section >
     </>

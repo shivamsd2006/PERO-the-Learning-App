@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CallAi } from "./api";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext ,useNavigate} from "react-router-dom";
+
 
 
 function PrimingPage() {
@@ -8,6 +9,11 @@ function PrimingPage() {
   const [qus, setQus] = useState('');
   const [feedback, setFeedbck] = useState('');
   const [aiQus, setAiQus] = useState('');
+  const navigate = useNavigate();
+
+  function toEncoding(){
+    navigate('/Encoding')
+  }
 
   async function handleQus(event) {
 
@@ -99,7 +105,7 @@ Each question should be concise and designed to make a student want to find the 
         <div
           dangerouslySetInnerHTML={{ __html: aiQus }} />
 
-        <button  id="goToEncoding">Encoding</button>
+        <button onClick={toEncoding} id="goToEncoding">Encoding</button>
 
 
 

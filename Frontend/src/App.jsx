@@ -6,8 +6,6 @@ import SimplifyPage from './SimplifyPage'
 import GroupingPage from './GroupingPage'
 import RetrievalPage from './RetrievalPage'
 import OverlearningPage from './OverlearningPage'
-import { Header } from './Header/Header'
-import { Footer } from './Footer/Footer'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from './Layout'
 
@@ -33,16 +31,49 @@ const router = createBrowserRouter([
                 <PrimingPage />
 
         },
+        {
+            path: '/Encoding',
+            element:
+                <EncodingPage />
+
+        },
+        {
+            path: '/Analogy',
+            element:
+                <AnalogyPage />
+
+        },
+        {
+            path: '/Grouping',
+            element:
+                <GroupingPage />
+
+        },
+        {
+            path: '/Simplify',
+            element:
+                <SimplifyPage />
+
+        },
+        {
+            path: '/Retrieval',
+            element:
+                <RetrievalPage/>
+
+        },
+        {
+            path: '/Overlearning',
+            element:
+                <OverlearningPage />
+
+        },
         ]
     }
 
 ]);
 
 function App() {
-
-
-
-    return (
+  return (
         <>
             <RouterProvider router={router} />
         </>

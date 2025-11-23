@@ -1,10 +1,21 @@
 import { useState, useEffect } from "react";
 import { CallAi } from "./api.js";
-function RetrievalPage({ content, onOverlearning }) {
+import { useOutletContext, useNavigate } from "react-router-dom";
+
+function RetrievalPage() {
+    const { content } = useOutletContext(); 
+    const navigate = useNavigate();
     const [qus, setQus] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [ans, setAns] = useState('');
     const [text, setText] = useState('');
+
+
+
+
+    function onOverlearning() {
+        navigate('/Overlearning');
+    }
 
     useEffect(() => {
         async function getRetrievalQus() {
@@ -54,4 +65,4 @@ function RetrievalPage({ content, onOverlearning }) {
         </>
     );
 }
-export default RetrievalPage
+export default RetrievalPage;

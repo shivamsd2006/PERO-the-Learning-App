@@ -1,5 +1,20 @@
-function EncodingPage({ onAnalogy, onSimplify, onGrouping, onRetrieval }) {
+import { useNavigate } from "react-router-dom"
 
+function EncodingPage() {
+const navigate = useNavigate();
+
+function onAnalogy(){
+    navigate('/Analogy');
+}
+function onSimplify(){
+    navigate('/Simplify');
+}
+function onGrouping(){
+    navigate('/Grouping');
+}
+function onRetrieval(){
+    navigate('/Retrieval');
+}
 
     return (
         <>
