@@ -11,7 +11,7 @@ const [content, setContent] = useState('');
     }
 
   return (
-    <div>
+    <div className='min-h-screen'>
                 <Header/>
                 <Outlet context={{content,onUpload}}/>
                 <Footer/>
