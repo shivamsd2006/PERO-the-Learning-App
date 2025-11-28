@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CallAi } from "./api";
 import { useOutletContext ,useNavigate} from "react-router-dom";
+import { AiOutlineSend } from "react-icons/ai";
 
 
 
@@ -79,37 +80,84 @@ Each question should be concise and designed to make a student want to find the 
       alert('Failed to generate questions');
     }
   }
+
+  function handleTextAreaInput(e) {
+    setQus(e.target.value);
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }
   return (
     <>
-      <div id="box">
-        <h1>step 1 Priming</h1>
-        <h2>upload your questions about the topic</h2>
-        <p>it is recommended to read the headings and subheadings or skim the topic once and whatever questions buildup
-          on your mind PERO will give you feedback and now read the topic again with the purpose of understanding and
-          keep the questions in your mind read it as you are reading it to answer the questions.</p>
-        <div id="questionFormBox">
-          <form onSubmit={handleQus} id="questionForm">
-            <textarea id="questionInput" placeholder="minimum 3-4 questions" type="text" value={qus} onChange={(e) => setQus(e.target.value)}></textarea>
-            <button type="submit" id="submitBtn" >Submit</button>
+     <section className="flex flex-col items-center justify-center min-h-[80vh] px-4">
+      
+      <div className="w-full max-w-3xl text-center">
+        
+    
+        <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
+          Step 1 Priming
+        </h1>
+        
+      
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">
+          Upload Your Questions About The Topic
+        </h2>
+        
+        {/* Description Text */}
+        <p className="text-lg text-gray-700 mb-10 font-medium leading-relaxed">
+          Skim The Topic First, Note Your Questions, Then Read Again — PERO Gives Feedback And Helps You Understand Deeply.
+        </p>
+
+        
+        <div className="mb-12 ">
+          <form onSubmit={handleQus} className="flex w-full max-w-2xl mx-auto border border-blue-300 rounded-full items-center p-1 shadow-sm bg-blue-50/50 focus-within:ring-2 focus-within:ring-blue-200 transition-all">
+            
+            {/* Textarea for Input */}
+            <textarea
+              id="questionInput"
+              className="flex-grow bg-transparent outline-none resize-none placeholder-gray-500 text-lg px-4 py-3 max-h-30"
+              placeholder="Write Your Questions Here"
+              rows={1}
+              value={qus}
+              onChange={handleTextAreaInput}
+              // Optional: Add the auto-grow logic here if you wish
+            ></textarea>
+            
+            {/* Submit Button with React Icon */}
+            <button 
+              type="submit" 
+              className="p-3 mr-1 text-blue-600 hover:text-blue-700 hover:bg-blue-100 rounded-full transition-colors"
+              aria-label="Submit Questions"
+            >
+              <AiOutlineSend />
+            </button>
           </form>
+
+          {/* Feedback Area (Conditional Rendering recommended) */}
+          {feedback && (
+             <div id="aiFeedback" className="mt-4 p-4 bg-blue-50 rounded-xl text-left" dangerouslySetInnerHTML={{ __html: feedback }} />
+          )}
         </div>
 
-        <div id="aiFeedback" dangerouslySetInnerHTML={{ __html: feedback }} />
+        {/* Generate Button Section */}
+        <div className="mb-10">
+          <button 
+            onClick={generateQus}
+            className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95"
+          >
+            Let PERO Pick Questions For You
+          </button>
 
+          {/* AI Questions Area */}
+          {aiQus && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-xl text-left" dangerouslySetInnerHTML={{ __html: aiQus }} />
+          )}
+        </div>
 
-        <h3>or</h3>
-        <h4>let PERO generate questions for you</h4>
-
-
-        <button id="generate" onClick={generateQus}>generate</button>
-        <div
-          dangerouslySetInnerHTML={{ __html: aiQus }} />
-
-        <button onClick={toEncoding} id="goToEncoding">Encoding</button>
-
-
+        
+        <button onClick={toEncoding} className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95">Encoding</button> 
 
       </div>
+    </section>
     </>
   );
 }
