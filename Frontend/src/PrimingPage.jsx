@@ -154,7 +154,7 @@ Each question should be concise and designed to make a student want to find the 
         </div>
 
         
-        <button onClick={toEncoding} className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95">Encoding</button> 
+        <button onClick={toEncoding} className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95">Go to step 2: Encoding</button> 
 
       </div>
     </section>
