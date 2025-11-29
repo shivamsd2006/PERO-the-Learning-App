@@ -90,7 +90,7 @@ Each question should be concise and designed to make a student want to find the 
     <>
      <section className="flex flex-col items-center justify-center min-h-[80vh] px-4">
       
-      <div className="w-full max-w-3xl text-center">
+      <div className="w-full max-w-3xl text-center pb-8">
         
     
         <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
@@ -125,8 +125,9 @@ Each question should be concise and designed to make a student want to find the 
             {/* Submit Button with React Icon */}
             <button 
               type="submit" 
-              className="p-3 mr-1 text-blue-600 hover:text-blue-700 hover:bg-blue-100 rounded-full transition-colors"
+              className="p-3 mr-1  hover:bg-blue-100 rounded-full transition-colors"
               aria-label="Submit Questions"
+              onClick={handleQus}
             >
               <AiOutlineSend />
             </button>
@@ -142,7 +143,8 @@ Each question should be concise and designed to make a student want to find the 
         <div className="mb-10">
           <button 
             onClick={generateQus}
-            className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95"
+            className="flex items-center justify-center gap-2 mx-auto p-3 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95"
+            
           >
             Let PERO Pick Questions For You
           </button>
@@ -154,7 +156,7 @@ Each question should be concise and designed to make a student want to find the 
         </div>
 
         
-        <button onClick={toEncoding} className="flex items-center justify-center gap-2 mx-auto px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95">Go to step 2: Encoding</button> 
+        <button onClick={toEncoding} className="flex items-center justify-center gap-2 mx-auto p-3 bg-blue-600 text-white text-xl font-bold rounded-full shadow-md hover:bg-blue-700 transition-transform active:scale-95 cursor-pointer ">Go to step 2: Encoding</button> 
 
       </div>
     </section>
