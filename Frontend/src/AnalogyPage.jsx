@@ -118,7 +118,7 @@ Format your response in simple HTML. For each analogy, use an <h3> heading for t
                         {receive && (
                             <div id="aiAnalogie" className="mt-8 p-6 bg-gray-800 text-gray-100 rounded-2xl text-left shadow-inner animate-fade-in w-full max-w-3xl">
                                 <h3 className="flex items-center gap-2 font-bold mb-3 text-blue-300">
-                                    <BiBot /> PERO's Analogy:
+                                     PERO's Analogy:
                                 </h3>
                                 <p className="text-lg leading-relaxed font-mono">{receive}</p>
                             </div>

@@ -67,7 +67,7 @@ function onRetrieval(){
             <div>
                 <button 
                     onClick={onRetrieval} 
-                    className="px-8 py-3  text-white bg-blue-600 font-bold rounded-full hover:bg-blue-50 transition-colors"
+                    className="px-8 py-3  text-white bg-blue-600 font-bold rounded-full transition-colors"
                 >
                     Go to Step 3: Retrieval 
                 </button>
