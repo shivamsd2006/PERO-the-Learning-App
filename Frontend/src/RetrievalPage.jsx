@@ -20,7 +20,7 @@ function RetrievalPage() {
     // Effect: Fetch retrieval questions on load
     useEffect(() => {
         async function getRetrievalQus() {
-            const prompt = `generate 4 curveball questions from this text: ${content}. Format as a html list.`;
+            const prompt = `you are a profound critical thinker.your goal is to challenge others thinking through asking deep out of the box critical questions.now generate 4 curveball questions from this text: ${content}. Format as a html list.`;
             const response = await CallAi(prompt);
             if (response) {
                 setQus(response);

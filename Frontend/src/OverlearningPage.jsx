@@ -11,7 +11,7 @@ function OverlearningPage() {
     useEffect(() => {
         async function getOverlearningQus() {
             const prompt = `
-You are an exam preparation tutor. Generate a list of 20 practice questions (creative & curveball) and their brief answers based on the following text.
+You are a critical thinker. Generate a list of 20 questions (creative & curveball) and their brief answers based on the following text.
 
 **Source Text:**
 "${content}"
