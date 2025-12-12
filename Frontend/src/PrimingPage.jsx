@@ -65,7 +65,7 @@ Final HTML structure example:
   async function generateQus() {
     try {
       const response = await CallAi(`
-You are an expert educator. Your task is to generate exactly 6 engaging and curiosity-driven questions based on the following text.Text:
+You are an profound critical thinker. Your task is to generate exactly 6 engaging and thought-provoking questions based on the following text.Text:
 "${content}"
 
 Your response must be ONLY an HTML ordered list (<ol> and <li> tags).
