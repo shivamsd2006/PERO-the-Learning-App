@@ -1,18 +1,19 @@
-require('dotenv').config();
-const express = require('express');
-
-const path = require('path');
-
-
+import express from 'express'
+import dotenv from 'dotenv'
+import connectDb from './src/db/db.js';
 const app = express();
-const port = 3000;
+dotenv.config({ path: './.env' })
+const port = process.env.PORT;
 const apiKey = process.env.GEMINI_API_KEY;
+console.log(apiKey)
+
+connectDb()
 
 if (!apiKey) { console.error('No GEMINI_API_KEY in .env'); }
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../frontend')));
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -34,7 +35,7 @@ app.post('/api/generate', async (req, res) => {
                 }]
             }]
         }
-        console.log('DEBUG:----------', link);
+
         const reply = await fetch(link, {
             method: 'POST',
             headers: {
